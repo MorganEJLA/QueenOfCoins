@@ -8,8 +8,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import CardIcon from "../components/CardIcon";
 import { Colors } from "../constants/Colors";
 import { fonts } from "../constants/Fonts";
+import { useCard } from "../context/CardContext";
 
 export default function Ritual() {
   const [checked, setChecked] = useState({
@@ -19,6 +21,7 @@ export default function Ritual() {
     creative: false,
     movement: false,
   });
+  const { currentCard } = useCard();
   const [fontsLoaded] = useFonts(fonts);
 
   if (!fontsLoaded) return null;
@@ -31,55 +34,40 @@ export default function Ritual() {
           <Text style={styles.backBtn}>← Today</Text>
         </TouchableOpacity>
         <View style={styles.badge}>
-          <Text style={styles.badgeText}>🌕 The Moon</Text>
+          <CardIcon id={currentCard.id} size={16} />
+          <Text style={styles.badgeText}>{currentCard.name}</Text>
         </View>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Text style={styles.title}>Todays Ritual</Text>
-        <Text style={styles.subtitle}>slow down. trust the dark.</Text>
+        <Text style={styles.title}>Today{"'"}s Ritual</Text>
+        <Text style={styles.subtitle}>{currentCard.tagline}</Text>
         <View style={styles.divider} />
 
         <View style={styles.block}>
           <Text style={styles.blockLabel}>Morning Anchor</Text>
           <Text style={styles.blockText}>
-            <Text style={styles.blockBold}>
-              Before your screen, sit in the quiet.{" "}
-            </Text>
-            Try 5 minutes of Holding the Tree — feel your feet on the floor. The
-            Moon asks you to root before you reach.
+            {currentCard.ritual.morningAnchor}
           </Text>
         </View>
 
         <View style={styles.block}>
           <Text style={styles.blockLabel}>Work Approach</Text>
           <Text style={styles.blockText}>
-            <Text style={styles.blockBold}>
-              Don{"'"}t force clarity today.{" "}
-            </Text>
-            Work in shorter bursts — 45 minutes, then step away. Intuition is
-            doing background processing. Let it.
+            {currentCard.ritual.workApproach}
           </Text>
         </View>
 
         <View style={styles.block}>
           <Text style={styles.blockLabel}>Creative Prompt</Text>
           <Text style={styles.blockText}>
-            <Text style={styles.blockItalic}>
-              What am I afraid to write down?{" "}
-            </Text>
-            Open your morning pages and let it come without editing. The Moon
-            rules what we hide from ourselves.
+            {currentCard.ritual.creativePrompt}
           </Text>
         </View>
 
         <View style={styles.block}>
           <Text style={styles.blockLabel}>Movement</Text>
-          <Text style={styles.blockText}>
-            <Text style={styles.blockBold}>Slow and fluid today. </Text>
-            Qigong or gentle stretching — Swimming Dragon or Pulling Down the
-            Heavens. Save the fire days for Fonda.
-          </Text>
+          <Text style={styles.blockText}>{currentCard.ritual.movement}</Text>
         </View>
         {/* Tracker */}
         <View style={styles.trackerGrid}>
@@ -179,6 +167,9 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
   },
   badge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
     borderWidth: 1,
     borderColor: "rgba(201,168,76,0.2)",
     paddingVertical: 6,

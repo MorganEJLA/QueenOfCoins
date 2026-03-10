@@ -1,29 +1,64 @@
 import { useFonts } from "expo-font";
 import { router } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import CardIcon from "../components/CardIcon";
 import { Colors } from "../constants/Colors";
 import { fonts } from "../constants/Fonts";
+import { useCard } from "../context/CardContext";
 
 export default function Today() {
   const [fontsLoaded] = useFonts(fonts);
+  const { currentCard } = useCard();
 
-  if (!fontsLoaded) {
-    return null;
-  }
+  if (!fontsLoaded) return null;
+
+  const romanNumerals = [
+    "0",
+    "I",
+    "II",
+    "III",
+    "IV",
+    "V",
+    "VI",
+    "VII",
+    "VIII",
+    "IX",
+    "X",
+    "XI",
+    "XII",
+    "XIII",
+    "XIV",
+    "XV",
+    "XVI",
+    "XVII",
+    "XVIII",
+    "XIX",
+    "XX",
+    "XXI",
+  ];
+  const today = new Date();
+  const dayName = today.toLocaleDateString("en-US", { weekday: "long" });
+  const monthDay = today.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+  });
+
   return (
     <View style={styles.container}>
       <Text style={styles.wordmark}>Queen Of Coins</Text>
-      <Text style={styles.date}>Monday · March 9</Text>
+      <Text style={styles.date}>
+        {dayName} · {monthDay}
+      </Text>
       <View style={styles.cardContainer}>
-        <Text style={styles.cardSymbol}>🌕</Text>
-        <Text style={styles.cardNumber}>XVIII · Major Arcana</Text>
-        <Text style={styles.cardName}>The Moon</Text>
-        <Text style={styles.cardTagline}>trust what you cannot yet see</Text>
-        <Text style={styles.cardDesc}>
-          You are moving through fog. That is not failure — it is the
-          in-between. The path is still there. Your body knows the way before
-          your mind does.
+        <View style={styles.cardSymbol}>
+          <CardIcon id={currentCard.id} size={72} />
+        </View>
+        <Text style={styles.cardNumber}>
+          {romanNumerals[currentCard.id]} · Major Arcana
         </Text>
+        <Text style={styles.cardName}>{currentCard.name}</Text>
+        <Text style={styles.cardTagline}>{currentCard.tagline}</Text>
+        <Text style={styles.cardDesc}>{currentCard.description}</Text>
         <TouchableOpacity
           style={styles.ctaButton}
           onPress={() => router.push("/ritual")}
@@ -63,8 +98,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
   },
   cardSymbol: {
-    fontSize: 64,
     marginBottom: 16,
+    alignItems: "center",
+    justifyContent: "center",
   },
   cardNumber: {
     fontFamily: "JosefinSans_300Light",
@@ -76,7 +112,7 @@ const styles = StyleSheet.create({
   },
   cardName: {
     fontFamily: "JosefinSans_700Bold",
-    fontSize: 48,
+    fontSize: 36,
     color: Colors.cream,
     letterSpacing: 2,
     marginBottom: 8,
