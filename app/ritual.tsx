@@ -1,11 +1,17 @@
 import { useFonts } from "expo-font";
 import { router } from "expo-router";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Colors } from "../constants/Colors";
-import { Fonts } from "../constants/Fonts";
+import { fonts } from "../constants/Fonts";
 
 export default function Ritual() {
-  const [fontsLoaded] = useFonts(Fonts);
+  const [fontsLoaded] = useFonts(fonts);
 
   if (!fontsLoaded) return null;
 
@@ -21,51 +27,80 @@ export default function Ritual() {
         </View>
       </View>
 
-      <Text style={styles.title}>Todays Ritual</Text>
-      <Text style={styles.subtitle}>slow down. trust the dark.</Text>
-      {/* Divider */}
-      <View style={styles.divider} />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Text style={styles.title}>Todays Ritual</Text>
+        <Text style={styles.subtitle}>slow down. trust the dark.</Text>
+        <View style={styles.divider} />
 
-      {/* Ritual Blocks */}
-      <View style={styles.block}>
-        <Text style={styles.blockLabel}>Morning Anchor</Text>
-        <Text style={styles.blockText}>
-          <Text style={styles.blockBold}>
-            Before your screen, sit in the quiet.{" "}
+        <View style={styles.block}>
+          <Text style={styles.blockLabel}>Morning Anchor</Text>
+          <Text style={styles.blockText}>
+            <Text style={styles.blockBold}>
+              Before your screen, sit in the quiet.{" "}
+            </Text>
+            Try 5 minutes of Holding the Tree — feel your feet on the floor. The
+            Moon asks you to root before you reach.
           </Text>
-          Try 5 minutes of Holding the Tree — feel your feet on the floor. The
-          Moon asks you to root before you reach.
-        </Text>
-      </View>
+        </View>
 
-      <View style={styles.block}>
-        <Text style={styles.blockLabel}>Work Approach</Text>
-        <Text style={styles.blockText}>
-          <Text style={styles.blockBold}>Dont force clarity today. </Text>
-          Work in shorter bursts — 45 minutes, then step away. Intuition is
-          doing background processing. Let it.
-        </Text>
-      </View>
-
-      <View style={styles.block}>
-        <Text style={styles.blockLabel}>Creative Prompt</Text>
-        <Text style={styles.blockText}>
-          <Text style={styles.blockItalic}>
-            What am I afraid to write down?{" "}
+        <View style={styles.block}>
+          <Text style={styles.blockLabel}>Work Approach</Text>
+          <Text style={styles.blockText}>
+            <Text style={styles.blockBold}>
+              Don{"'"}t force clarity today.{" "}
+            </Text>
+            Work in shorter bursts — 45 minutes, then step away. Intuition is
+            doing background processing. Let it.
           </Text>
-          Open your morning pages and let it come without editing. The Moon
-          rules what we hide from ourselves.
-        </Text>
-      </View>
+        </View>
 
-      <View style={styles.block}>
-        <Text style={styles.blockLabel}>Movement</Text>
-        <Text style={styles.blockText}>
-          <Text style={styles.blockBold}>Slow and fluid today. </Text>
-          Qigong or gentle stretching — Swimming Dragon or Pulling Down the
-          Heavens. Save the fire days for Fonda.
-        </Text>
-      </View>
+        <View style={styles.block}>
+          <Text style={styles.blockLabel}>Creative Prompt</Text>
+          <Text style={styles.blockText}>
+            <Text style={styles.blockItalic}>
+              What am I afraid to write down?{" "}
+            </Text>
+            Open your morning pages and let it come without editing. The Moon
+            rules what we hide from ourselves.
+          </Text>
+        </View>
+
+        <View style={styles.block}>
+          <Text style={styles.blockLabel}>Movement</Text>
+          <Text style={styles.blockText}>
+            <Text style={styles.blockBold}>Slow and fluid today. </Text>
+            Qigong or gentle stretching — Swimming Dragon or Pulling Down the
+            Heavens. Save the fire days for Fonda.
+          </Text>
+        </View>
+        {/* Tracker */}
+        <View style={styles.tracker}>
+          <Text style={styles.title}>Today{"'"}s Ritual</Text>
+          <View style={styles.trackerGrid}>
+            <TouchableOpacity style={styles.trackerItem}>
+              <View style={[styles.checkbox, styles.checkboxDone]}>
+                <Text style={styles.checkmark}>✓</Text>
+              </View>
+              <Text style={styles.trackerLabel}>Tarot Pull</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.trackerItem}>
+              <View style={styles.checkbox} />
+              <Text style={styles.trackerLabel}>Movement</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.trackerItem}>
+              <View style={styles.checkbox} />
+              <Text style={styles.trackerLabel}>Morning Pages</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.trackerItem}>
+              <View style={styles.checkbox} />
+              <Text style={styles.trackerLabel}>Sunlight</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 }
@@ -85,9 +120,9 @@ const styles = StyleSheet.create({
   },
   backBtn: {
     fontFamily: "JosefinSans_300Light",
-    fontSize: 12,
+    fontSize: 11,
     color: "rgba(45,140,140,0.7)",
-    letterSpacing: 2,
+    letterSpacing: 3,
     textTransform: "uppercase",
   },
   badge: {
@@ -98,21 +133,24 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(201,168,76,0.06)",
   },
   badgeText: {
-    fontFamily: "Fraunces_700Bold",
-    fontSize: 12,
+    fontFamily: "JosefinSans_600SemiBold",
+    fontSize: 11,
     color: Colors.gold,
+    letterSpacing: 2,
   },
   title: {
-    fontFamily: "Fraunces_900Black",
+    fontFamily: "JosefinSans_700Bold",
     fontSize: 28,
     color: Colors.cream,
+    letterSpacing: 2,
+    textTransform: "uppercase",
     marginBottom: 4,
   },
   subtitle: {
-    fontFamily: "Fraunces_300Light_Italic",
+    fontFamily: "JosefinSans_300Light_Italic",
     fontSize: 13,
     color: "rgba(201,168,76,0.6)",
-    letterSpacing: 1,
+    letterSpacing: 2,
     marginBottom: 24,
   },
   divider: {
@@ -124,8 +162,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   blockLabel: {
-    fontFamily: "JosefinSans_300Light",
-    fontSize: 11,
+    fontFamily: "JosefinSans_400Regular",
+    fontSize: 9,
     color: "rgba(45,140,140,0.8)",
     letterSpacing: 4,
     textTransform: "uppercase",
@@ -133,17 +171,66 @@ const styles = StyleSheet.create({
   },
   blockText: {
     fontFamily: "JosefinSans_300Light",
-    fontSize: 17,
-    color: "rgba(245,237,214,0.85)",
-    lineHeight: 26,
+    fontSize: 14,
+    color: "rgba(245,237,214,0.8)",
+    lineHeight: 24,
+    letterSpacing: 0.5,
   },
   blockBold: {
-    fontFamily: "Fraunces_500Medium",
-    fontSize: 17,
+    fontFamily: "JosefinSans_600SemiBold",
     color: Colors.cream,
   },
   blockItalic: {
     fontFamily: "JosefinSans_300Light_Italic",
     color: Colors.gold,
+  },
+  tracker: {
+    borderTopWidth: 1,
+    borderTopColor: "rgba(201,168,76,0.12)",
+    paddingTop: 20,
+    marginTop: 8,
+    paddingBottom: 40,
+  },
+  trackerTitle: {
+    fontFamily: "JosefinSans_300Light",
+    fontSize: 9,
+    color: "rgba(201,168,76,0.45)",
+    letterSpacing: 4,
+    textTransform: "uppercase",
+    marginBottom: 14,
+  },
+  trackerGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 12,
+  },
+  trackerItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    width: "45%",
+  },
+  checkbox: {
+    width: 16,
+    height: 16,
+    borderWidth: 1,
+    borderColor: "rgba(201,168,76,0.35)",
+  },
+  checkboxDone: {
+    backgroundColor: "rgba(201,168,76,0.15)",
+    borderColor: "rgba(201,168,76,0.7)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  checkmark: {
+    fontSize: 10,
+    color: Colors.gold,
+  },
+  trackerLabel: {
+    fontFamily: "JosefinSans_300Light",
+    fontSize: 11,
+    color: "rgba(245,237,214,0.5)",
+    letterSpacing: 2,
+    textTransform: "uppercase",
   },
 });
