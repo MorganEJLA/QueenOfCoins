@@ -1,26 +1,19 @@
 import {
-  Fraunces_300Light,
-  Fraunces_300Light_Italic,
-  Fraunces_500Medium,
-  Fraunces_700Bold,
-  Fraunces_700Bold_Italic,
-  Fraunces_900Black,
-} from "@expo-google-fonts/fraunces";
+  JosefinSans_100Thin,
+  JosefinSans_300Light,
+  JosefinSans_300Light_Italic,
+  JosefinSans_400Regular,
+  JosefinSans_400Regular_Italic,
+  JosefinSans_600SemiBold,
+  JosefinSans_700Bold,
+} from "@expo-google-fonts/josefin-sans";
 
-import {
-  CormorantGaramond_300Light,
-  CormorantGaramond_300Light_Italic,
-  CormorantGaramond_400Regular,
-} from "@expo-google-fonts/cormorant-garamond";
-
-export const Fonts = {
-  Fraunces_300Light,
-  Fraunces_300Light_Italic,
-  Fraunces_500Medium,
-  Fraunces_700Bold,
-  Fraunces_700Bold_Italic,
-  Fraunces_900Black,
-  CormorantGaramond_300Light,
-  CormorantGaramond_300Light_Italic,
-  CormorantGaramond_400Regular,
+export const fonts = {
+  JosefinSans_100Thin,
+  JosefinSans_300Light,
+  JosefinSans_300Light_Italic,
+  JosefinSans_400Regular,
+  JosefinSans_400Regular_Italic,
+  JosefinSans_600SemiBold,
+  JosefinSans_700Bold,
 };

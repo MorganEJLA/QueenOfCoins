@@ -2,10 +2,10 @@ import { useFonts } from "expo-font";
 import { router } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Colors } from "../constants/Colors";
-import { Fonts } from "../constants/Fonts";
+import { fonts } from "../constants/Fonts";
 
 export default function Today() {
-  const [fontsLoaded] = useFonts(Fonts);
+  const [fontsLoaded] = useFonts(fonts);
 
   if (!fontsLoaded) {
     return null;
@@ -42,18 +42,18 @@ const styles = StyleSheet.create({
     paddingTop: 60,
   },
   wordmark: {
-    fontFamily: "Fraunces_300Light_Italic",
+    fontFamily: "JosefinSans_300Light",
     fontSize: 11,
     color: "rgba(201,168,76,0.5)",
-    letterSpacing: 3,
+    letterSpacing: 4,
     textTransform: "uppercase",
     marginBottom: 8,
   },
   date: {
-    fontFamily: "CormorantGaramond_300Light",
+    fontFamily: "JosefinSans_300Light",
     fontSize: 11,
     color: "rgba(45,140,140,0.7)",
-    letterSpacing: 3,
+    letterSpacing: 4,
     textTransform: "uppercase",
   },
   cardContainer: {
@@ -67,35 +67,37 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   cardNumber: {
-    fontFamily: "CormorantGaramond_300Light",
+    fontFamily: "JosefinSans_300Light",
     fontSize: 11,
     color: "rgba(201,168,76,0.5)",
-    letterSpacing: 3,
+    letterSpacing: 4,
     textTransform: "uppercase",
     marginBottom: 8,
   },
   cardName: {
-    fontFamily: "Fraunces_900Black",
-    fontSize: 42,
+    fontFamily: "JosefinSans_700Bold",
+    fontSize: 48,
     color: Colors.cream,
-    letterSpacing: -0.5,
+    letterSpacing: 2,
     marginBottom: 8,
     textAlign: "center",
+    textTransform: "uppercase",
   },
   cardTagline: {
-    fontFamily: "Fraunces_300Light_Italic",
+    fontFamily: "JosefinSans_300Light_Italic",
     fontSize: 14,
     color: Colors.gold,
-    letterSpacing: 1,
+    letterSpacing: 2,
     marginBottom: 24,
     textAlign: "center",
   },
   cardDesc: {
-    fontFamily: "CormorantGaramond_300Light_Italic",
+    fontFamily: "JosefinSans_300Light",
     fontSize: 15,
     color: "rgba(245,237,214,0.6)",
     lineHeight: 26,
     textAlign: "center",
+    letterSpacing: 0.5,
   },
   ctaButton: {
     borderWidth: 1,
@@ -106,10 +108,10 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(201,168,76,0.08)",
   },
   ctaText: {
-    fontFamily: "CormorantGaramond_400Regular",
+    fontFamily: "JosefinSans_400Regular",
     fontSize: 11,
     color: Colors.gold,
-    letterSpacing: 3,
+    letterSpacing: 4,
     textTransform: "uppercase",
   },
 });
