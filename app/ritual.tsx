@@ -1,5 +1,6 @@
 import { useFonts } from "expo-font";
 import { router } from "expo-router";
+import { useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -11,6 +12,13 @@ import { Colors } from "../constants/Colors";
 import { fonts } from "../constants/Fonts";
 
 export default function Ritual() {
+  const [checked, setChecked] = useState({
+    tarot: true,
+    morning: false,
+    work: false,
+    creative: false,
+    movement: false,
+  });
   const [fontsLoaded] = useFonts(fonts);
 
   if (!fontsLoaded) return null;
@@ -74,31 +82,76 @@ export default function Ritual() {
           </Text>
         </View>
         {/* Tracker */}
-        <View style={styles.tracker}>
-          <Text style={styles.title}>Today{"'"}s Ritual</Text>
-          <View style={styles.trackerGrid}>
-            <TouchableOpacity style={styles.trackerItem}>
-              <View style={[styles.checkbox, styles.checkboxDone]}>
-                <Text style={styles.checkmark}>✓</Text>
-              </View>
-              <Text style={styles.trackerLabel}>Tarot Pull</Text>
-            </TouchableOpacity>
+        <View style={styles.trackerGrid}>
+          <TouchableOpacity
+            style={styles.trackerItem}
+            onPress={() =>
+              setChecked((prev) => ({ ...prev, tarot: !prev.tarot }))
+            }
+          >
+            <View
+              style={[styles.checkbox, checked.tarot && styles.checkboxDone]}
+            >
+              {checked.tarot && <Text style={styles.checkmark}>✓</Text>}
+            </View>
+            <Text style={styles.trackerLabel}>Tarot Pull</Text>
+          </TouchableOpacity>
 
-            <TouchableOpacity style={styles.trackerItem}>
-              <View style={styles.checkbox} />
-              <Text style={styles.trackerLabel}>Movement</Text>
-            </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.trackerItem}
+            onPress={() =>
+              setChecked((prev) => ({ ...prev, morning: !prev.morning }))
+            }
+          >
+            <View
+              style={[styles.checkbox, checked.morning && styles.checkboxDone]}
+            >
+              {checked.morning && <Text style={styles.checkmark}>✓</Text>}
+            </View>
+            <Text style={styles.trackerLabel}>Morning Anchor</Text>
+          </TouchableOpacity>
 
-            <TouchableOpacity style={styles.trackerItem}>
-              <View style={styles.checkbox} />
-              <Text style={styles.trackerLabel}>Morning Pages</Text>
-            </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.trackerItem}
+            onPress={() =>
+              setChecked((prev) => ({ ...prev, work: !prev.work }))
+            }
+          >
+            <View
+              style={[styles.checkbox, checked.work && styles.checkboxDone]}
+            >
+              {checked.work && <Text style={styles.checkmark}>✓</Text>}
+            </View>
+            <Text style={styles.trackerLabel}>Work Approach</Text>
+          </TouchableOpacity>
 
-            <TouchableOpacity style={styles.trackerItem}>
-              <View style={styles.checkbox} />
-              <Text style={styles.trackerLabel}>Sunlight</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            style={styles.trackerItem}
+            onPress={() =>
+              setChecked((prev) => ({ ...prev, creative: !prev.creative }))
+            }
+          >
+            <View
+              style={[styles.checkbox, checked.creative && styles.checkboxDone]}
+            >
+              {checked.creative && <Text style={styles.checkmark}>✓</Text>}
+            </View>
+            <Text style={styles.trackerLabel}>Creative Prompt</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.trackerItem}
+            onPress={() =>
+              setChecked((prev) => ({ ...prev, movement: !prev.movement }))
+            }
+          >
+            <View
+              style={[styles.checkbox, checked.movement && styles.checkboxDone]}
+            >
+              {checked.movement && <Text style={styles.checkmark}>✓</Text>}
+            </View>
+            <Text style={styles.trackerLabel}>Movement</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
