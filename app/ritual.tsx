@@ -11,6 +11,7 @@ import {
 import CardIcon from "../components/CardIcon";
 import { Colors } from "../constants/Colors";
 import { fonts } from "../constants/Fonts";
+import { getMovementSuggestion } from "../constants/tarotCards";
 import { useCard } from "../context/CardContext";
 
 export default function Ritual() {
@@ -21,7 +22,7 @@ export default function Ritual() {
     creative: false,
     movement: false,
   });
-  const { currentCard } = useCard();
+  const { currentCard, movementPreference } = useCard();
   const [fontsLoaded] = useFonts(fonts);
 
   if (!fontsLoaded) return null;
@@ -67,7 +68,12 @@ export default function Ritual() {
 
         <View style={styles.block}>
           <Text style={styles.blockLabel}>Movement</Text>
-          <Text style={styles.blockText}>{currentCard.ritual.movement}</Text>
+          <Text style={styles.blockText}>
+            {getMovementSuggestion(
+              currentCard.ritual.movementEnergy,
+              movementPreference,
+            )}
+          </Text>
         </View>
         {/* Tracker */}
         <View style={styles.trackerGrid}>

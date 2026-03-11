@@ -1,9 +1,12 @@
 import { createContext, ReactNode, useContext, useState } from "react";
+import { MovementPreference } from "../constants/movementData";
 import { majorArcana, TarotCard } from "../constants/tarotCards";
 
 type CardContextType = {
   currentCard: TarotCard;
   pullCard: () => void;
+  movementPreference: MovementPreference | null;
+  setMovementPreference: (pref: MovementPreference) => void;
 };
 
 const CardContext = createContext<CardContextType | null>(null);
@@ -15,13 +18,14 @@ export function CardProvider({ children }: { children: ReactNode }) {
   };
 
   const [currentCard, setCurrentCard] = useState<TarotCard>(getRandomCard);
+  const [movementPreference, setMovementPreference] = useState<MovementPreference | null>(null);
 
   const pullCard = () => {
     setCurrentCard(getRandomCard());
   };
 
   return (
-    <CardContext.Provider value={{ currentCard, pullCard }}>
+    <CardContext.Provider value={{ currentCard, pullCard, movementPreference, setMovementPreference }}>
       {children}
     </CardContext.Provider>
   );

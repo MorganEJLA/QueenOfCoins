@@ -6,15 +6,15 @@ import { fonts } from "../constants/Fonts";
 import { majorArcana } from "../constants/tarotCards";
 
 const mockHistory = [
-  { cardId: 18, date: "Monday · March 10" },
-  { cardId: 9, date: "Sunday · March 9" },
-  { cardId: 3, date: "Saturday · March 8" },
-  { cardId: 21, date: "Friday · March 7" },
-  { cardId: 7, date: "Thursday · March 6" },
-  { cardId: 14, date: "Wednesday · March 5" },
-  { cardId: 0, date: "Tuesday · March 4" },
-  { cardId: 11, date: "Monday · March 3" },
-  { cardId: 17, date: "Sunday · March 2" },
+  { cardId: 18, date: "Mon · Mar 10" },
+  { cardId: 9, date: "Sun · Mar 9" },
+  { cardId: 3, date: "Sat · Mar 8" },
+  { cardId: 21, date: "Fri · Mar 7" },
+  { cardId: 7, date: "Thu · Mar 6" },
+  { cardId: 14, date: "Wed · Mar 5" },
+  { cardId: 0, date: "Tue · Mar 4" },
+  { cardId: 11, date: "Mon · Mar 3" },
+  { cardId: 17, date: "Sun · Mar 2" },
 ];
 
 export default function History() {
