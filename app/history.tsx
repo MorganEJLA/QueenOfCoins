@@ -4,22 +4,22 @@ import CardIcon from "../components/CardIcon";
 import { Colors } from "../constants/Colors";
 import { fonts } from "../constants/Fonts";
 import { majorArcana } from "../constants/tarotCards";
-
-const mockHistory = [
-  { cardId: 18, date: "Mon · Mar 10" },
-  { cardId: 9, date: "Sun · Mar 9" },
-  { cardId: 3, date: "Sat · Mar 8" },
-  { cardId: 21, date: "Fri · Mar 7" },
-  { cardId: 7, date: "Thu · Mar 6" },
-  { cardId: 14, date: "Wed · Mar 5" },
-  { cardId: 0, date: "Tue · Mar 4" },
-  { cardId: 11, date: "Mon · Mar 3" },
-  { cardId: 17, date: "Sun · Mar 2" },
-];
+import { useCard } from "../context/CardContext";
 
 export default function History() {
   const [fontsLoaded] = useFonts(fonts);
+  const { history: cardHistory } = useCard();
+
   if (!fontsLoaded) return null;
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString + "T12:00:00");
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -27,20 +27,28 @@ export default function History() {
       <Text style={styles.pageTitle}>History</Text>
       <View style={styles.divider} />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.grid}>
-          {mockHistory.map((entry, index) => {
-            const card = majorArcana[entry.cardId];
-            return (
-              <View key={index} style={styles.card}>
-                <View style={styles.iconWrap}>
-                  <CardIcon id={card.id} size={36} />
+        {cardHistory.length === 0 ? (
+          <View style={styles.empty}>
+            <Text style={styles.emptyText}>Your pulls will appear here.</Text>
+            <Text style={styles.emptySubtext}>Come back tomorrow.</Text>
+          </View>
+        ) : (
+          <View style={styles.grid}>
+            {cardHistory.map((entry, index) => {
+              const card = majorArcana.find((c) => c.id === entry.cardId);
+              if (!card) return null;
+              return (
+                <View key={index} style={styles.card}>
+                  <View style={styles.iconWrap}>
+                    <CardIcon id={card.id} size={36} />
+                  </View>
+                  <Text style={styles.cardName}>{card.name}</Text>
+                  <Text style={styles.cardDate}>{formatDate(entry.date)}</Text>
                 </View>
-                <Text style={styles.cardName}>{card.name}</Text>
-                <Text style={styles.cardDate}>{entry.date}</Text>
-              </View>
-            );
-          })}
-        </View>
+              );
+            })}
+          </View>
+        )}
       </ScrollView>
     </View>
   );
@@ -111,6 +119,28 @@ const styles = StyleSheet.create({
     color: "rgba(201,168,76,0.45)",
     letterSpacing: 1,
     textTransform: "uppercase",
+    textAlign: "center",
+  },
+  empty: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: 80,
+    gap: 8,
+  },
+  emptyText: {
+    fontFamily: "JosefinSans_300Light",
+    fontSize: 13,
+    color: "rgba(245,237,214,0.4)",
+    letterSpacing: 2,
+    textTransform: "uppercase",
+    textAlign: "center",
+  },
+  emptySubtext: {
+    fontFamily: "JosefinSans_300Light_Italic",
+    fontSize: 12,
+    color: "rgba(201,168,76,0.3)",
+    letterSpacing: 2,
     textAlign: "center",
   },
 });

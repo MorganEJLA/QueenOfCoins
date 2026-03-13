@@ -1,3 +1,4 @@
+import TabIcon from "@/components/TabIcon";
 import { Tabs } from "expo-router";
 import { Colors } from "../constants/Colors";
 import { CardProvider } from "../context/CardContext";
@@ -25,28 +26,30 @@ export default function RootLayout() {
           name="index"
           options={{
             title: "Today",
-            tabBarIcon: () => null,
+            tabBarIcon: ({ color }) => <TabIcon name="today" color={color} />,
           }}
         />
         <Tabs.Screen
           name="ritual"
           options={{
             title: "Ritual",
-            tabBarIcon: () => null,
+            tabBarIcon: ({ color }) => <TabIcon name="ritual" color={color} />,
           }}
         />
         <Tabs.Screen
           name="history"
           options={{
             title: "History",
-            tabBarIcon: () => null,
+            tabBarIcon: ({ color }) => <TabIcon name="history" color={color} />,
           }}
         />
         <Tabs.Screen
           name="settings"
           options={{
             title: "Settings",
-            tabBarIcon: () => null,
+            tabBarIcon: ({ color }) => (
+              <TabIcon name="settings" color={color} />
+            ),
           }}
         />
       </Tabs>

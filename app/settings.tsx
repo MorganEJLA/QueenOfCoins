@@ -1,8 +1,10 @@
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { useFonts } from "expo-font";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   TouchableOpacity,
   View,
@@ -11,6 +13,12 @@ import { Colors } from "../constants/Colors";
 import { fonts } from "../constants/Fonts";
 import { MovementPreference } from "../constants/movementData";
 import { useCard } from "../context/CardContext";
+import {
+  cancelNotifications,
+  requestNotificationPermission,
+  scheduleDailyNotification,
+} from "../utils/notifications";
+
 const movementOptions = [
   "Walking",
   "Running",
@@ -26,10 +34,47 @@ const movementOptions = [
 
 export default function Settings() {
   const [fontsLoaded] = useFonts(fonts);
-  const [selectedMovement, setSelectedMovement] = useState<string | null>(null);
-  const { setMovementPreference } = useCard();
+  const { movementPreference, setMovementPreference } = useCard();
+  const [selectedMovement, setSelectedMovement] = useState<string | null>(
+    movementPreference,
+  );
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [notificationTime, setNotificationTime] = useState(
+    new Date(new Date().setHours(8, 0, 0, 0)),
+  );
+
+  useEffect(() => {
+    setSelectedMovement(movementPreference);
+  }, [movementPreference]);
 
   if (!fontsLoaded) return null;
+
+  const handleNotificationToggle = async (value: boolean) => {
+    if (value) {
+      const granted = await requestNotificationPermission();
+      if (granted) {
+        setNotificationsEnabled(true);
+        await scheduleDailyNotification(
+          notificationTime.getHours(),
+          notificationTime.getMinutes(),
+        );
+      }
+    } else {
+      setNotificationsEnabled(false);
+      await cancelNotifications();
+    }
+  };
+
+  const handleTimeChange = async (_: any, selectedDate?: Date) => {
+    if (!selectedDate) return;
+    setNotificationTime(selectedDate);
+    if (notificationsEnabled) {
+      await scheduleDailyNotification(
+        selectedDate.getHours(),
+        selectedDate.getMinutes(),
+      );
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -38,6 +83,42 @@ export default function Settings() {
       <View style={styles.divider} />
 
       <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Notifications */}
+        <Text style={styles.sectionLabel}>Daily Reminder</Text>
+        <Text style={styles.sectionSubtitle}>
+          A morning prompt to pull your card.
+        </Text>
+        <View style={styles.notificationRow}>
+          <Text style={styles.notificationLabel}>Notifications</Text>
+          <Switch
+            value={notificationsEnabled}
+            onValueChange={handleNotificationToggle}
+            trackColor={{
+              false: "rgba(245,237,214,0.1)",
+              true: Colors.deepTeal,
+            }}
+            thumbColor={
+              notificationsEnabled ? Colors.gold : "rgba(245,237,214,0.4)"
+            }
+          />
+        </View>
+
+        {notificationsEnabled && (
+          <View style={styles.timePickerWrap}>
+            <Text style={styles.timeLabel}>Remind me at</Text>
+            <DateTimePicker
+              value={notificationTime}
+              mode="time"
+              display="spinner"
+              onChange={handleTimeChange}
+              textColor={Colors.cream}
+              style={styles.timePicker}
+            />
+          </View>
+        )}
+
+        <View style={styles.divider} />
+
         {/* Movement Preference */}
         <Text style={styles.sectionLabel}>Movement Preference</Text>
         <Text style={styles.sectionSubtitle}>
@@ -117,43 +198,69 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: "rgba(201,168,76,0.15)",
     marginBottom: 24,
+    marginTop: 8,
   },
   sectionLabel: {
     fontFamily: "JosefinSans_400Regular",
-    fontSize: 9,
-    color: "rgba(45,140,140,0.8)",
+    fontSize: 11,
+    color: Colors.peacock,
     letterSpacing: 4,
     textTransform: "uppercase",
-    marginBottom: 8,
+    marginBottom: 6,
   },
   sectionSubtitle: {
     fontFamily: "JosefinSans_300Light_Italic",
-    fontSize: 12,
-    color: "rgba(201,168,76,0.5)",
-    letterSpacing: 1,
+    fontSize: 13,
+    color: "rgba(245,237,214,0.5)",
     marginBottom: 16,
+  },
+  notificationRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 12,
+  },
+  notificationLabel: {
+    fontFamily: "JosefinSans_300Light",
+    fontSize: 14,
+    color: Colors.cream,
+    letterSpacing: 2,
+    textTransform: "uppercase",
+  },
+  timePickerWrap: {
+    marginBottom: 16,
+  },
+  timeLabel: {
+    fontFamily: "JosefinSans_300Light",
+    fontSize: 11,
+    color: "rgba(245,237,214,0.4)",
+    letterSpacing: 3,
+    textTransform: "uppercase",
+    marginBottom: 4,
+  },
+  timePicker: {
+    height: 120,
   },
   optionGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 10,
-    marginBottom: 32,
+    marginBottom: 24,
   },
   optionChip: {
     borderWidth: 1,
-    borderColor: "rgba(201,168,76,0.2)",
+    borderColor: "rgba(245,237,214,0.2)",
     paddingVertical: 8,
     paddingHorizontal: 16,
-    backgroundColor: "rgba(201,168,76,0.03)",
   },
   optionChipSelected: {
-    borderColor: "rgba(201,168,76,0.7)",
-    backgroundColor: "rgba(201,168,76,0.12)",
+    borderColor: Colors.gold,
+    backgroundColor: "rgba(201,168,76,0.1)",
   },
   optionText: {
     fontFamily: "JosefinSans_300Light",
     fontSize: 11,
-    color: "rgba(245,237,214,0.4)",
+    color: "rgba(245,237,214,0.5)",
     letterSpacing: 2,
     textTransform: "uppercase",
   },
@@ -161,11 +268,12 @@ const styles = StyleSheet.create({
     color: Colors.gold,
   },
   aboutBlock: {
-    gap: 12,
+    gap: 10,
+    marginBottom: 16,
   },
   aboutTitle: {
     fontFamily: "JosefinSans_700Bold",
-    fontSize: 16,
+    fontSize: 18,
     color: Colors.cream,
     letterSpacing: 2,
     textTransform: "uppercase",
@@ -175,12 +283,11 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: "rgba(245,237,214,0.6)",
     lineHeight: 22,
-    letterSpacing: 0.5,
   },
   aboutVersion: {
     fontFamily: "JosefinSans_300Light",
-    fontSize: 10,
-    color: "rgba(201,168,76,0.35)",
+    fontSize: 11,
+    color: Colors.peacock,
     letterSpacing: 3,
     textTransform: "uppercase",
   },
