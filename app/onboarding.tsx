@@ -1,4 +1,11 @@
+import { MovementPreference } from "@/constants/movementData";
 import { majorArcana } from "@/constants/tarotCards";
+import { useCard } from "@/context/CardContext";
+import {
+  cancelNotifications,
+  requestNotificationPermission,
+  scheduleDailyNotification,
+} from "@/utils/notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFonts } from "expo-font";
 import { router } from "expo-router";
@@ -6,7 +13,9 @@ import { useEffect, useRef, useState } from "react";
 import {
   Animated,
   Dimensions,
+  ScrollView,
   StyleSheet,
+  Switch,
   Text,
   TouchableOpacity,
   View,
@@ -114,16 +123,94 @@ function SlideThree({ onNext, card }: { onNext: () => void; card: any }) {
 }
 
 function SlideFour({ onComplete }: { onComplete: () => void }) {
+  const { setMovementPreference } = useCard();
+  const [selectedMovement, setSelectedMovement] = useState<string | null>(null);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+
+  const movementOptions = [
+    "Walking",
+    "Running",
+    "Aerobics",
+    "Dance",
+    "Pilates",
+    "Yoga",
+    "Swimming",
+    "Weights",
+    "Bodyweight",
+    "Tai Chi",
+  ];
+
+  const handleMovementSelect = (option: string) => {
+    setSelectedMovement(option);
+    setMovementPreference(option as MovementPreference);
+  };
+
+  const handleNotificationToggle = async (value: boolean) => {
+    if (value) {
+      const granted = await requestNotificationPermission();
+      if (granted) {
+        setNotificationsEnabled(true);
+        await scheduleDailyNotification(8, 0);
+      }
+    } else {
+      setNotificationsEnabled(false);
+      await cancelNotifications();
+    }
+  };
+
   return (
-    <View style={styles.slideContent}>
-      <Text style={styles.slideLabel}>You Are Ready</Text>
+    <ScrollView
+      contentContainerStyle={styles.slideFourContent}
+      showsVerticalScrollIndicator={false}
+    >
+      <Text style={styles.slideLabel}>Make It Yours</Text>
       <Text style={styles.bodyText}>
-        Each morning, open the app and draw your card. Let it guide your day.
+        Choose how you move and when you want your daily reminder.
       </Text>
+
+      <Text style={styles.slideSectionLabel}>Movement Preference</Text>
+      <View style={styles.optionGrid}>
+        {movementOptions.map((option) => (
+          <TouchableOpacity
+            key={option}
+            style={[
+              styles.optionChip,
+              selectedMovement === option && styles.optionChipSelected,
+            ]}
+            onPress={() => handleMovementSelect(option)}
+          >
+            <Text
+              style={[
+                styles.optionText,
+                selectedMovement === option && styles.optionTextSelected,
+              ]}
+            >
+              {option}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      <Text style={styles.slideSectionLabel}>Daily Reminder</Text>
+      <View style={styles.notificationRow}>
+        <Text style={styles.notificationLabel}>Notifications</Text>
+        <Switch
+          value={notificationsEnabled}
+          onValueChange={handleNotificationToggle}
+          trackColor={{ false: "rgba(245,237,214,0.1)", true: Colors.deepTeal }}
+          thumbColor={
+            notificationsEnabled ? Colors.gold : "rgba(245,237,214,0.4)"
+          }
+        />
+      </View>
+      <Text style={styles.notificationHint}>
+        You can change this anytime in Settings.
+      </Text>
+
       <TouchableOpacity style={styles.beginButton} onPress={onComplete}>
         <Text style={styles.beginButtonText}>Begin</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 const styles = StyleSheet.create({
@@ -239,5 +326,67 @@ const styles = StyleSheet.create({
     color: Colors.gold,
     letterSpacing: 5,
     textTransform: "uppercase",
+  },
+  slideFourContent: {
+    alignItems: "center",
+    paddingHorizontal: 40,
+    paddingTop: 80,
+    paddingBottom: 60,
+    gap: 16,
+  },
+  slideSectionLabel: {
+    fontFamily: "JosefinSans_400Regular",
+    fontSize: 11,
+    color: Colors.peacock,
+    letterSpacing: 4,
+    textTransform: "uppercase",
+    alignSelf: "flex-start",
+    marginTop: 8,
+  },
+  optionGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+    alignSelf: "stretch",
+  },
+  optionChip: {
+    borderWidth: 1,
+    borderColor: "rgba(245,237,214,0.2)",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  optionChipSelected: {
+    borderColor: Colors.gold,
+    backgroundColor: "rgba(201,168,76,0.1)",
+  },
+  optionText: {
+    fontFamily: "JosefinSans_300Light",
+    fontSize: 11,
+    color: "rgba(245,237,214,0.5)",
+    letterSpacing: 2,
+    textTransform: "uppercase",
+  },
+  optionTextSelected: {
+    color: Colors.gold,
+  },
+  notificationRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    alignSelf: "stretch",
+  },
+  notificationLabel: {
+    fontFamily: "JosefinSans_300Light",
+    fontSize: 14,
+    color: Colors.cream,
+    letterSpacing: 2,
+    textTransform: "uppercase",
+  },
+  notificationHint: {
+    fontFamily: "JosefinSans_300Light_Italic",
+    fontSize: 11,
+    color: "rgba(245,237,214,0.3)",
+    letterSpacing: 1,
+    alignSelf: "flex-start",
   },
 });
