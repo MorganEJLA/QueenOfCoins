@@ -1,9 +1,33 @@
 import TabIcon from "@/components/TabIcon";
-import { Tabs } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router, Tabs } from "expo-router";
+import { useEffect, useState } from "react";
 import { Colors } from "../constants/Colors";
 import { CardProvider } from "../context/CardContext";
 
 export default function RootLayout() {
+  const [onboardingChecked, setOnboardingChecked] = useState(false);
+
+  useEffect(() => {
+    async function checkOnboarding() {
+      try {
+        const complete = await AsyncStorage.getItem("qoc_onboarding_complete");
+        if (complete !== "true") {
+          setTimeout(() => {
+            router.replace("/onboarding");
+          }, 100);
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setOnboardingChecked(true);
+      }
+    }
+    checkOnboarding();
+  }, []);
+
+  if (!onboardingChecked) return null;
+
   return (
     <CardProvider>
       <Tabs
@@ -50,6 +74,13 @@ export default function RootLayout() {
             tabBarIcon: ({ color }) => (
               <TabIcon name="settings" color={color} />
             ),
+          }}
+        />
+        <Tabs.Screen
+          name="onboarding"
+          options={{
+            href: null,
+            tabBarStyle: { display: "none" },
           }}
         />
       </Tabs>

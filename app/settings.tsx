@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useFonts } from "expo-font";
 import { useEffect, useState } from "react";
@@ -47,6 +48,31 @@ export default function Settings() {
     setSelectedMovement(movementPreference);
   }, [movementPreference]);
 
+  useEffect(() => {
+    async function loadNotificationSettings() {
+      try {
+        const savedEnabled = await AsyncStorage.getItem(
+          "qoc_notifications_enabled",
+        );
+        const savedTime = await AsyncStorage.getItem("qoc_notification_time");
+
+        if (savedEnabled === "true") {
+          setNotificationsEnabled(true);
+          if (savedTime) {
+            const date = new Date(savedTime);
+            setNotificationTime(date);
+            await scheduleDailyNotification(date.getHours(), date.getMinutes());
+          } else {
+            await scheduleDailyNotification(8, 0);
+          }
+        }
+      } catch (e) {
+        console.log("Failed to load notification settings", e);
+      }
+    }
+    loadNotificationSettings();
+  }, []);
+
   if (!fontsLoaded) return null;
 
   const handleNotificationToggle = async (value: boolean) => {
@@ -54,6 +80,7 @@ export default function Settings() {
       const granted = await requestNotificationPermission();
       if (granted) {
         setNotificationsEnabled(true);
+        await AsyncStorage.setItem("qoc_notifications_enabled", "true");
         await scheduleDailyNotification(
           notificationTime.getHours(),
           notificationTime.getMinutes(),
@@ -61,6 +88,7 @@ export default function Settings() {
       }
     } else {
       setNotificationsEnabled(false);
+      await AsyncStorage.setItem("qoc_notifications_enabled", "false");
       await cancelNotifications();
     }
   };
@@ -68,6 +96,10 @@ export default function Settings() {
   const handleTimeChange = async (_: any, selectedDate?: Date) => {
     if (!selectedDate) return;
     setNotificationTime(selectedDate);
+    await AsyncStorage.setItem(
+      "qoc_notification_time",
+      selectedDate.toISOString(),
+    );
     if (notificationsEnabled) {
       await scheduleDailyNotification(
         selectedDate.getHours(),
