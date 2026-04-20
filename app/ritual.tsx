@@ -1,9 +1,11 @@
 import { useFonts } from "expo-font";
 import { router } from "expo-router";
 import { useState } from "react";
+
 import {
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   TouchableOpacity,
   View,
@@ -22,6 +24,7 @@ export default function Ritual() {
     creative: false,
     movement: false,
   });
+  const [lowEnergyDay, setLowEnergyDay] = useState(false);
   const { currentCard, movementPreference } = useCard();
   const [fontsLoaded] = useFonts(fonts);
 
@@ -67,10 +70,21 @@ export default function Ritual() {
         </View>
 
         <View style={styles.block}>
-          <Text style={styles.blockLabel}>Movement</Text>
+          <View style={styles.blockLabelRow}>
+            <Text style={styles.blockLabel}>Movement</Text>
+            <View style={styles.toggleRow}>
+              <Text style={styles.toggleLabel}>Low energy day</Text>
+              <Switch
+                value={lowEnergyDay}
+                onValueChange={setLowEnergyDay}
+                trackColor={{ false: Colors.deepTeal, true: Colors.gold }}
+                thumbColor={Colors.cream}
+              />
+            </View>
+          </View>
           <Text style={styles.blockText}>
             {getMovementSuggestion(
-              currentCard.ritual.movementEnergy,
+              lowEnergyDay ? "restorative" : currentCard.ritual.movementEnergy,
               movementPreference,
             )}
           </Text>
@@ -219,6 +233,12 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     marginBottom: 8,
   },
+  blockLabelRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 8,
+  },
   blockText: {
     fontFamily: "JosefinSans_300Light",
     fontSize: 14,
@@ -233,6 +253,16 @@ const styles = StyleSheet.create({
   blockItalic: {
     fontFamily: "JosefinSans_300Light_Italic",
     color: Colors.gold,
+  },
+  toggleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  toggleLabel: {
+    fontFamily: "JosefinSans_400Regular", // use whatever your body font key is
+    fontSize: 12,
+    color: Colors.deepTeal,
   },
   tracker: {
     borderTopWidth: 1,

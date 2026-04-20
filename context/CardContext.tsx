@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 import { MovementPreference } from "../constants/movementData";
-import { majorArcana, TarotCard } from "../constants/tarotCards";
+import { fullDeck, TarotCard } from "../constants/tarotCards";
 
 export type HistoryEntry = {
   cardId: number;
@@ -30,8 +30,8 @@ const MOVEMENT_KEY = "qoc_movement_preference";
 const HISTORY_KEY = "qoc_history";
 
 function getRandomCard(): TarotCard {
-  const index = Math.floor(Math.random() * majorArcana.length);
-  return majorArcana[index];
+  const index = Math.floor(Math.random() * fullDeck.length);
+  return fullDeck[index];
 }
 
 function getTodayString(): string {
@@ -60,7 +60,7 @@ export function CardProvider({ children }: { children: ReactNode }) {
           ]);
 
         if (savedCardId && savedDate === today) {
-          const card = majorArcana.find((c) => c.id === parseInt(savedCardId));
+          const card = fullDeck.find((c) => c.id === parseInt(savedCardId));
           if (card) setCurrentCard(card);
         } else {
           // New Day, pull a new card and save it

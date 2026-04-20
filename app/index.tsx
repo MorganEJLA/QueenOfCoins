@@ -54,7 +54,9 @@ export default function Today() {
           <CardIcon id={currentCard.id} size={72} />
         </View>
         <Text style={styles.cardNumber}>
-          {romanNumerals[currentCard.id]} · Major Arcana
+          {currentCard.suit === "major"
+            ? `${romanNumerals[currentCard.id]} · Major Arcana`
+            : `${currentCard.suit.charAt(0).toUpperCase() + currentCard.suit.slice(1)}`}
         </Text>
         <Text style={styles.cardName}>{currentCard.name}</Text>
         <Text style={styles.cardTagline}>{currentCard.tagline}</Text>

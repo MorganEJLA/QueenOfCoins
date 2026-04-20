@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import CardIcon from "../components/CardIcon";
 import { Colors } from "../constants/Colors";
 import { fonts } from "../constants/Fonts";
-import { majorArcana } from "../constants/tarotCards";
+import { fullDeck } from "../constants/tarotCards";
 import { useCard } from "../context/CardContext";
 
 export default function History() {
@@ -35,7 +35,7 @@ export default function History() {
         ) : (
           <View style={styles.grid}>
             {cardHistory.map((entry, index) => {
-              const card = majorArcana.find((c) => c.id === entry.cardId);
+              const card = fullDeck.find((c) => c.id === entry.cardId);
               if (!card) return null;
               return (
                 <View key={index} style={styles.card}>
