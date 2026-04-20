@@ -35,7 +35,7 @@ const movementOptions = [
 
 export default function Settings() {
   const [fontsLoaded] = useFonts(fonts);
-  const { movementPreference, setMovementPreference } = useCard();
+  const { movementPreference, setMovementPreference, pullCard } = useCard();
   const [selectedMovement, setSelectedMovement] = useState<string | null>(
     movementPreference,
   );
@@ -189,12 +189,20 @@ export default function Settings() {
           <Text style={styles.aboutTitle}>Queen of Coins</Text>
           <Text style={styles.aboutText}>
             A daily ritual app anchored in tarot. Each morning a card is drawn
-            from the Major Arcana — offering a morning practice, work approach,
-            creative prompt, and movement for the day.
+            from the full 78-card deck — offering a morning practice, work
+            approach, creative prompt, and movement for the day.
           </Text>
-          <Text style={styles.aboutVersion}>Version 1.0 · Major Arcana</Text>
+          <Text style={styles.aboutVersion}>Version 1.0 · Full Deck</Text>
         </View>
-
+        <View style={styles.divider} />
+        <TouchableOpacity
+          onPress={pullCard}
+          style={{ paddingVertical: 16, alignItems: "center" }}
+        >
+          <Text style={[styles.aboutVersion, { color: Colors.gold }]}>
+            ⟳ Pull New Card (Dev)
+          </Text>
+        </TouchableOpacity>
         <View style={{ height: 40 }} />
       </ScrollView>
     </View>
