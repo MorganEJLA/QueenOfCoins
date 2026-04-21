@@ -1,6 +1,6 @@
 import { useFonts } from "expo-font";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import {
   ScrollView,
@@ -11,7 +11,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import ViewShot, { captureRef } from "react-native-view-shot";
 import CardIcon from "../components/CardIcon";
+import ShareCard from "../components/ShareCard";
 import { Colors } from "../constants/Colors";
 import { fonts } from "../constants/Fonts";
 import { getMovementSuggestion } from "../constants/tarotCards";
@@ -26,10 +28,18 @@ export default function Ritual() {
     movement: false,
   });
   const [lowEnergyDay, setLowEnergyDay] = useState(false);
-
+  const shareCardRef = useRef<React.ElementRef<typeof ViewShot>>(null);
   const handleShare = async () => {
-    const message = `Today's card: ${currentCard.name}\n"${currentCard.tagline}"\n\nMorning Anchor: ${currentCard.ritual.morningAnchor}\n\nCreative Prompt: ${currentCard.ritual.creativePrompt}\n\n#QueenOfCoins`;
-    await Share.share({ message });
+    try {
+      const uri = await captureRef(shareCardRef, {
+        format: "png",
+        quality: 1,
+        result: "tmpfile",
+      });
+      await Share.share({ url: uri });
+    } catch (e) {
+      console.error("Share failed", e);
+    }
   };
   const { currentCard, movementPreference } = useCard();
   const [fontsLoaded] = useFonts(fonts);
@@ -37,141 +47,161 @@ export default function Ritual() {
   if (!fontsLoaded) return null;
 
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <Text style={styles.backBtn}>← Today</Text>
-        </TouchableOpacity>
-        <View style={styles.badge}>
-          <CardIcon id={currentCard.id} size={16} />
-          <Text style={styles.badgeText}>{currentCard.name}</Text>
-        </View>
-      </View>
-
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <Text style={styles.title}>Today{"'"}s Ritual</Text>
-        <Text style={styles.subtitle}>{currentCard.tagline}</Text>
-        <View style={styles.divider} />
-
-        <View style={styles.block}>
-          <Text style={styles.blockLabel}>Morning Anchor</Text>
-          <Text style={styles.blockText}>
-            {currentCard.ritual.morningAnchor}
-          </Text>
-        </View>
-
-        <View style={styles.block}>
-          <Text style={styles.blockLabel}>Work Approach</Text>
-          <Text style={styles.blockText}>
-            {currentCard.ritual.workApproach}
-          </Text>
-        </View>
-
-        <View style={styles.block}>
-          <Text style={styles.blockLabel}>Creative Prompt</Text>
-          <Text style={styles.blockText}>
-            {currentCard.ritual.creativePrompt}
-          </Text>
-        </View>
-
-        <View style={styles.block}>
-          <View style={styles.blockLabelRow}>
-            <Text style={styles.blockLabel}>Movement</Text>
-            <View style={styles.toggleRow}>
-              <Text style={styles.toggleLabel}>Low energy day</Text>
-              <Switch
-                value={lowEnergyDay}
-                onValueChange={setLowEnergyDay}
-                trackColor={{ false: Colors.deepTeal, true: Colors.gold }}
-                thumbColor={Colors.cream}
-              />
-            </View>
+    <>
+      <View style={styles.container}>
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()}>
+            <Text style={styles.backBtn}>← Today</Text>
+          </TouchableOpacity>
+          <View style={styles.badge}>
+            <CardIcon id={currentCard.id} size={16} />
+            <Text style={styles.badgeText}>{currentCard.name}</Text>
           </View>
-          <Text style={styles.blockText}>
-            {getMovementSuggestion(
-              lowEnergyDay ? "restorative" : currentCard.ritual.movementEnergy,
-              movementPreference,
-            )}
-          </Text>
         </View>
-        {/* Tracker */}
-        <View style={styles.trackerGrid}>
-          <TouchableOpacity
-            style={styles.trackerItem}
-            onPress={() =>
-              setChecked((prev) => ({ ...prev, tarot: !prev.tarot }))
-            }
-          >
-            <View
-              style={[styles.checkbox, checked.tarot && styles.checkboxDone]}
-            >
-              {checked.tarot && <Text style={styles.checkmark}>✓</Text>}
-            </View>
-            <Text style={styles.trackerLabel}>Tarot Pull</Text>
-          </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.trackerItem}
-            onPress={() =>
-              setChecked((prev) => ({ ...prev, morning: !prev.morning }))
-            }
-          >
-            <View
-              style={[styles.checkbox, checked.morning && styles.checkboxDone]}
-            >
-              {checked.morning && <Text style={styles.checkmark}>✓</Text>}
-            </View>
-            <Text style={styles.trackerLabel}>Morning Anchor</Text>
-          </TouchableOpacity>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <Text style={styles.title}>Today{"'"}s Ritual</Text>
+          <Text style={styles.subtitle}>{currentCard.tagline}</Text>
+          <View style={styles.divider} />
 
-          <TouchableOpacity
-            style={styles.trackerItem}
-            onPress={() =>
-              setChecked((prev) => ({ ...prev, work: !prev.work }))
-            }
-          >
-            <View
-              style={[styles.checkbox, checked.work && styles.checkboxDone]}
-            >
-              {checked.work && <Text style={styles.checkmark}>✓</Text>}
-            </View>
-            <Text style={styles.trackerLabel}>Work Approach</Text>
-          </TouchableOpacity>
+          <View style={styles.block}>
+            <Text style={styles.blockLabel}>Morning Anchor</Text>
+            <Text style={styles.blockText}>
+              {currentCard.ritual.morningAnchor}
+            </Text>
+          </View>
 
-          <TouchableOpacity
-            style={styles.trackerItem}
-            onPress={() =>
-              setChecked((prev) => ({ ...prev, creative: !prev.creative }))
-            }
-          >
-            <View
-              style={[styles.checkbox, checked.creative && styles.checkboxDone]}
-            >
-              {checked.creative && <Text style={styles.checkmark}>✓</Text>}
-            </View>
-            <Text style={styles.trackerLabel}>Creative Prompt</Text>
-          </TouchableOpacity>
+          <View style={styles.block}>
+            <Text style={styles.blockLabel}>Work Approach</Text>
+            <Text style={styles.blockText}>
+              {currentCard.ritual.workApproach}
+            </Text>
+          </View>
 
-          <TouchableOpacity
-            style={styles.trackerItem}
-            onPress={() =>
-              setChecked((prev) => ({ ...prev, movement: !prev.movement }))
-            }
-          >
-            <View
-              style={[styles.checkbox, checked.movement && styles.checkboxDone]}
-            >
-              {checked.movement && <Text style={styles.checkmark}>✓</Text>}
+          <View style={styles.block}>
+            <Text style={styles.blockLabel}>Creative Prompt</Text>
+            <Text style={styles.blockText}>
+              {currentCard.ritual.creativePrompt}
+            </Text>
+          </View>
+
+          <View style={styles.block}>
+            <View style={styles.blockLabelRow}>
+              <Text style={styles.blockLabel}>Movement</Text>
+              <View style={styles.toggleRow}>
+                <Text style={styles.toggleLabel}>Low energy day</Text>
+                <Switch
+                  value={lowEnergyDay}
+                  onValueChange={setLowEnergyDay}
+                  trackColor={{ false: Colors.deepTeal, true: Colors.gold }}
+                  thumbColor={Colors.cream}
+                />
+              </View>
             </View>
-            <Text style={styles.trackerLabel}>Movement</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-      <TouchableOpacity style={styles.shareBtn} onPress={handleShare}>
-        <Text style={styles.shareBtnText}>Share Today's Card</Text>
-      </TouchableOpacity>
-    </View>
+            <Text style={styles.blockText}>
+              {getMovementSuggestion(
+                lowEnergyDay
+                  ? "restorative"
+                  : currentCard.ritual.movementEnergy,
+                movementPreference,
+              )}
+            </Text>
+          </View>
+          {/* Tracker */}
+          <View style={styles.trackerGrid}>
+            <TouchableOpacity
+              style={styles.trackerItem}
+              onPress={() =>
+                setChecked((prev) => ({ ...prev, tarot: !prev.tarot }))
+              }
+            >
+              <View
+                style={[styles.checkbox, checked.tarot && styles.checkboxDone]}
+              >
+                {checked.tarot && <Text style={styles.checkmark}>✓</Text>}
+              </View>
+              <Text style={styles.trackerLabel}>Tarot Pull</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.trackerItem}
+              onPress={() =>
+                setChecked((prev) => ({ ...prev, morning: !prev.morning }))
+              }
+            >
+              <View
+                style={[
+                  styles.checkbox,
+                  checked.morning && styles.checkboxDone,
+                ]}
+              >
+                {checked.morning && <Text style={styles.checkmark}>✓</Text>}
+              </View>
+              <Text style={styles.trackerLabel}>Morning Anchor</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.trackerItem}
+              onPress={() =>
+                setChecked((prev) => ({ ...prev, work: !prev.work }))
+              }
+            >
+              <View
+                style={[styles.checkbox, checked.work && styles.checkboxDone]}
+              >
+                {checked.work && <Text style={styles.checkmark}>✓</Text>}
+              </View>
+              <Text style={styles.trackerLabel}>Work Approach</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.trackerItem}
+              onPress={() =>
+                setChecked((prev) => ({ ...prev, creative: !prev.creative }))
+              }
+            >
+              <View
+                style={[
+                  styles.checkbox,
+                  checked.creative && styles.checkboxDone,
+                ]}
+              >
+                {checked.creative && <Text style={styles.checkmark}>✓</Text>}
+              </View>
+              <Text style={styles.trackerLabel}>Creative Prompt</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.trackerItem}
+              onPress={() =>
+                setChecked((prev) => ({ ...prev, movement: !prev.movement }))
+              }
+            >
+              <View
+                style={[
+                  styles.checkbox,
+                  checked.movement && styles.checkboxDone,
+                ]}
+              >
+                {checked.movement && <Text style={styles.checkmark}>✓</Text>}
+              </View>
+              <Text style={styles.trackerLabel}>Movement</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+        <TouchableOpacity style={styles.shareBtn} onPress={handleShare}>
+          <Text style={styles.shareBtnText}>Share Today&apos;s Card</Text>
+        </TouchableOpacity>
+      </View>
+      <ViewShot
+        ref={shareCardRef}
+        options={{ format: "png", quality: 1 }}
+        style={styles.hiddenCard}
+      >
+        <ShareCard card={currentCard} />
+      </ViewShot>
+    </>
   );
 }
 
@@ -187,6 +217,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: 24,
+  },
+  hiddenCard: {
+    position: "absolute",
+    top: -2000,
+    left: -2000,
   },
   backBtn: {
     fontFamily: "JosefinSans_300Light",
