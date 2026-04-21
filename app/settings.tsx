@@ -23,7 +23,7 @@ import {
 const movementOptions = [
   "Walking",
   "Running",
-  "Aerobics",
+  "Capoeira",
   "Dance",
   "Pilates",
   "Yoga",

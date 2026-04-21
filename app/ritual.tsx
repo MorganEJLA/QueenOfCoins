@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import {
   ScrollView,
+  Share,
   StyleSheet,
   Switch,
   Text,
@@ -25,6 +26,11 @@ export default function Ritual() {
     movement: false,
   });
   const [lowEnergyDay, setLowEnergyDay] = useState(false);
+
+  const handleShare = async () => {
+    const message = `Today's card: ${currentCard.name}\n"${currentCard.tagline}"\n\nMorning Anchor: ${currentCard.ritual.morningAnchor}\n\nCreative Prompt: ${currentCard.ritual.creativePrompt}\n\n#QueenOfCoins`;
+    await Share.share({ message });
+  };
   const { currentCard, movementPreference } = useCard();
   const [fontsLoaded] = useFonts(fonts);
 
@@ -162,6 +168,9 @@ export default function Ritual() {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      <TouchableOpacity style={styles.shareBtn} onPress={handleShare}>
+        <Text style={styles.shareBtnText}>Share Today's Card</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -209,6 +218,20 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
     textTransform: "uppercase",
     marginBottom: 4,
+  },
+  shareBtn: {
+    borderWidth: 1,
+    borderColor: Colors.gold,
+    paddingVertical: 14,
+    alignItems: "center",
+    marginTop: 24,
+    marginBottom: 8,
+  },
+  shareBtnText: {
+    fontFamily: "JosefinSans_400Regular",
+    fontSize: 12,
+    letterSpacing: 2,
+    color: Colors.gold,
   },
   subtitle: {
     fontFamily: "JosefinSans_300Light_Italic",

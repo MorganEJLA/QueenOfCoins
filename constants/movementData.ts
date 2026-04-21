@@ -9,7 +9,7 @@ export type MovementEnergy =
 export type MovementPreference =
   | "Walking"
   | "Running"
-  | "Aerobics"
+  | "Capoeira"
   | "Dance"
   | "Pilates"
   | "Yoga"
@@ -49,18 +49,18 @@ export const movementSuggestions: Record<
     restorative:
       "Rest from running today. A slow walk or simply stretching your legs is enough. The body is asking for recovery, not performance.",
   },
-  Aerobics: {
-    slow: "Low-impact movement today — gentle cardio, nothing that spikes the heart rate. Keep it soft.",
+  Capoeira: {
+    slow: "Cocorinha and negativa today — slow, low, controlled. Hold each position and feel the strength it takes. No rush, no flow, just the foundation.",
     fluid:
-      "A flowing aerobics sequence, continuous movement without sharp stops. Let one motion carry into the next.",
+      "Ginga into esquiva, esquiva into ginga — continuous and unhurried. Let the evasion and the base movement become one unbroken conversation.",
     grounded:
-      "Steady-state cardio with focus — feel your feet, your breath, your rhythm. Present and grounded.",
+      "Resistência work today — negativa holds, cocorinha squats, escala. Deep and deliberate. Feel the floor. This is where Capoeira lives.",
     intense:
-      "High-intensity today. Go hard, recover, go again. Let the body release what the mind has been holding.",
+      "Full jogo energy — esquivas, queixadas, au. Move like the game is happening. Let the body remember it's capable of this.",
     expressive:
-      "Put on music you love and just move. Forget the routine — let the song lead.",
+      "Improvise today. No sequence, no drilling — just play. Let the ginga go wherever it wants and follow it. That's the art.",
     restorative:
-      "Nothing high impact today. Gentle movement only — slow arm circles, easy marching in place. Honor what the body can give right now.",
+      "Cocorinha holds only — slow descents, long holds, gentle returns. Five minutes of this wakes the legs and honors the form without demanding anything extra.",
   },
 
   Dance: {
@@ -152,7 +152,7 @@ export const movementSuggestions: Record<
       "Push hands or a more martial application today — let tai chi show its strength rather than its softness.",
     expressive:
       "Move through the form outside if you can. Let the environment become part of the practice.",
-    restorative: "Qi gong today instead of the full form. Eight Pieces of Brocade or simply Holding the Tree — five minutes of standing meditation is enough.",
-},
-  
+    restorative:
+      "Qi gong today instead of the full form. Eight Pieces of Brocade or simply Holding the Tree — five minutes of standing meditation is enough.",
+  },
 };
