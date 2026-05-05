@@ -35,10 +35,7 @@ Pull a card each morning and receive a personalized ritual — a morning anchor,
 
 | Today | Ritual | Movement | Journal | Settings |
 |-------|--------|----------|---------|---------|
-| <img width="160" src="https://github.com/user-attachments/assets/b9de0ae7-a50d-4a5b-891b-cb82d61feca1" /> | <img width="160" src="https://github.com/user-attachments/assets/274770f8-95bb-41cb-8570-d0e8a5aedda8" /> | <img width="160" src="https://github.com/user-attachments/assets/4ecf5631-c900-48aa-9b17-01376ca77890" /> | <img width="160" src="https://github.com/user-attachments/assets/5962e017-11ec-43e3-8c29-e6d1c66c26d2" /> | <img width="160" height="1266" alt="Image" src="https://github.com/user-attachments/assets/b7925ec7-347c-4a6f-b9e4-ccc3064555ea" />
-|
-<img width="160" alt="Image" src="https://github.com/user-attachments/assets/e032be8a-49b0-4ecb-b9cd-25e65efbf1d3" />
-
+| <img width="160" src="https://github.com/user-attachments/assets/b9de0ae7-a50d-4a5b-891b-cb82d61feca1" /> | <img width="160" src="https://github.com/user-attachments/assets/274770f8-95bb-41cb-8570-d0e8a5aedda8" /> | <img width="160" src="https://github.com/user-attachments/assets/4ecf5631-c900-48aa-9b17-01376ca77890" /> | <img width="160" src="https://github.com/user-attachments/assets/5962e017-11ec-43e3-8c29-e6d1c66c26d2" /> | <img width="160" src="https://github.com/user-attachments/assets/b7925ec7-347c-4a6f-b9e4-ccc3064555ea" /> |
 ---
 
 ## Running Locally
