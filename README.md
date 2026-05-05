@@ -1,41 +1,55 @@
+# Queen of Coins
 
-# Queen of Coins 🌙
+A tarot-anchored daily ritual app built with React Native and Expo.
 
-A tarot-anchored daily routine app built with React Native and Expo.
-Draw a card each morning, set intentions, track your history, and 
-build rituals around your day.
+Pull a card each morning and receive a personalized ritual — a morning anchor, work approach, creative prompt, movement suggestion, and journal space — all tied to that card's energy.
+
+---
 
 ## Features
 
-- 🃏 Daily tarot card draws with interpretations
-- 📖 Persistent history via AsyncStorage
-- 🔔 Daily notification scheduling with custom time picker
-- 🛳 Four-slide onboarding flow
-- 🎨 Custom tab icons and app icon
-- Runs on iOS Simulator and physical device via Expo Go
+- **Full 78-card deck** — all Major Arcana, Minor Arcana, and Court Cards with unique ritual content per card
+- **Daily ritual screen** — morning anchor, work approach, creative prompt, and movement suggestion
+- **Journal** — write and save daily reflections tied to each card, persisted with AsyncStorage
+- **Streak tracking** — tracks consecutive days of practice
+- **Low energy toggle** — swaps movement suggestions to restorative options
+- **Movement preference** — choose between standard, Capoeira, or qi gong suggestions
+- **Share card** — export a styled card image to share
+- **Onboarding flow** — movement preference setup on first launch
+
+---
 
 ## Tech Stack
 
-- React Native + Expo (file-based routing)
+- React Native / Expo (file-based routing)
 - TypeScript
 - AsyncStorage for local persistence
-- Expo Notifications
+- react-native-view-shot for image sharing
+- expo-notifications
+- Custom SVG tab icons
 
-## Run Locally
+---
+
+## Screenshots
+
+*Coming soon*
+
+---
+
+## Running Locally
 
 ```bash
 npm install
 npx expo start
 ```
 
-Scan the QR code with Expo Go on your phone, or open in iOS Simulator.
+Requires Expo Go on iOS or Android, or an iOS/Android simulator.
 
 ---
 
-*EAS build setup in progress for App Store deployment.*
+## Status
 
-
-
+Active development. Currently in personal beta — used daily as a wellness and creative practice tool.
 
 
 
