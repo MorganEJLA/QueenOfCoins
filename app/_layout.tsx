@@ -77,6 +77,13 @@ export default function RootLayout() {
           }}
         />
         <Tabs.Screen
+          name="journal"
+          options={{
+            title: "Journal",
+            tabBarIcon: ({ color }) => <TabIcon name="journal" color={color} />,
+          }}
+        />
+        <Tabs.Screen
           name="onboarding"
           options={{
             href: null,

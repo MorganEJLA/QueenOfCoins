@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Switch,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -18,6 +19,7 @@ import { Colors } from "../constants/Colors";
 import { fonts } from "../constants/Fonts";
 import { getMovementSuggestion } from "../constants/tarotCards";
 import { useCard } from "../context/CardContext";
+import { useJournal } from "./hooks/useJournal";
 
 export default function Ritual() {
   const [checked, setChecked] = useState({
@@ -42,6 +44,7 @@ export default function Ritual() {
     }
   };
   const { currentCard, movementPreference } = useCard();
+  const { entry, setEntry, save, saved } = useJournal(currentCard.name);
   const [fontsLoaded] = useFonts(fonts);
 
   if (!fontsLoaded) return null;
@@ -85,7 +88,19 @@ export default function Ritual() {
               {currentCard.ritual.creativePrompt}
             </Text>
           </View>
-
+          <View style={styles.block}>
+            <Text style={styles.blockLabel}>Journal</Text>
+            <TextInput
+              style={styles.journalInput}
+              placeholder="Write your reflection..."
+              placeholderTextColor="rgba(245,237,214,0.25)"
+              multiline
+              value={entry}
+              onChangeText={setEntry}
+              onBlur={() => save(entry)}
+            />
+            {saved && <Text style={styles.savedText}>✓ Saved</Text>}
+          </View>
           <View style={styles.block}>
             <View style={styles.blockLabelRow}>
               <Text style={styles.blockLabel}>Movement</Text>
@@ -369,6 +384,26 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: "rgba(245,237,214,0.5)",
     letterSpacing: 2,
+    textTransform: "uppercase",
+  },
+  journalInput: {
+    fontFamily: "JosefinSans_300Light",
+    fontSize: 14,
+    color: Colors.cream,
+    borderWidth: 1,
+    borderColor: "rgba(201,168,76,0.2)",
+    padding: 12,
+    minHeight: 100,
+    textAlignVertical: "top",
+    lineHeight: 24,
+    letterSpacing: 0.5,
+  },
+  savedText: {
+    fontFamily: "JosefinSans_400Regular",
+    fontSize: 10,
+    color: Colors.deepTeal,
+    letterSpacing: 3,
+    marginTop: 6,
     textTransform: "uppercase",
   },
 });

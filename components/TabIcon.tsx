@@ -2,7 +2,7 @@ import React from "react";
 import Svg, { Circle, Line, Rect } from "react-native-svg";
 
 type Props = {
-  name: "today" | "ritual" | "history" | "settings";
+  name: "today" | "ritual" | "history" | "settings" | "journal";
   color: string;
   size?: number;
 };
@@ -87,6 +87,14 @@ export default function TabIcon({ name, color, size = 20 }: Props) {
           />
           <Line x1="4" y1="9" x2="20" y2="9" stroke={color} strokeWidth="1" />
           <Line x1="4" y1="15" x2="20" y2="15" stroke={color} strokeWidth="1" />
+        </Svg>
+      );
+    case "journal":
+      return (
+        <Svg {...props}>
+          <Line x1="5" y1="6" x2="19" y2="6" stroke={color} strokeWidth="1" />
+          <Line x1="5" y1="11" x2="19" y2="11" stroke={color} strokeWidth="1" />
+          <Line x1="5" y1="16" x2="13" y2="16" stroke={color} strokeWidth="1" />
         </Svg>
       );
   }
