@@ -20,6 +20,7 @@ type CardContextType = {
   movementPreference: MovementPreference | null;
   setMovementPreference: (pref: MovementPreference) => void;
   history: HistoryEntry[];
+  streak: number;
 };
 
 const CardContext = createContext<CardContextType | null>(null);
@@ -37,8 +38,25 @@ function getRandomCard(): TarotCard {
 function getTodayString(): string {
   return new Date().toISOString().split("T")[0];
 }
+function calculateStreak(history: HistoryEntry[]): number {
+  if (history.length === 0) return 0;
+  const sorted = [...history].sort((a, b) => (a.date > b.date ? -1 : 1));
+  let streak = 1;
+  for (let i = 0; i < sorted.length - 1; i++) {
+    const current = new Date(sorted[i].date);
+    const next = new Date(sorted[i + 1].date);
+    const diff = (current.getTime() - next.getTime()) / (1000 * 60 * 60 * 24);
+    if (diff === 1) {
+      streak++;
+    } else {
+      break;
+    }
+  }
+  return streak;
+}
 export function CardProvider({ children }: { children: ReactNode }) {
   const [currentCard, setCurrentCard] = useState<TarotCard>(getRandomCard);
+  const [streak, setStreak] = useState(0);
   const [movementPreference, setMovementPreferenceState] =
     useState<MovementPreference | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
@@ -75,8 +93,11 @@ export function CardProvider({ children }: { children: ReactNode }) {
         if (savedMovement) {
           setMovementPreference(savedMovement as MovementPreference);
         }
+
         if (savedHistory) {
-          setHistory(JSON.parse(savedHistory));
+          const parsed = JSON.parse(savedHistory);
+          setHistory(parsed);
+          setStreak(calculateStreak(parsed));
         }
       } catch (e) {
         console.error("Failed to load card data", e);
@@ -127,6 +148,7 @@ export function CardProvider({ children }: { children: ReactNode }) {
         movementPreference,
         setMovementPreference,
         history,
+        streak,
       }}
     >
       {children}

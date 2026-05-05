@@ -8,7 +8,7 @@ import { useCard } from "../context/CardContext";
 
 export default function Today() {
   const [fontsLoaded] = useFonts(fonts);
-  const { currentCard } = useCard();
+  const { currentCard, streak } = useCard();
 
   if (!fontsLoaded) return null;
 
@@ -49,6 +49,7 @@ export default function Today() {
       <Text style={styles.date}>
         {dayName} · {monthDay}
       </Text>
+      {streak > 0 && <Text style={styles.streak}>{streak} day streak 🜂</Text>}
       <View style={styles.cardContainer}>
         <View style={styles.cardSymbol}>
           <CardIcon id={currentCard.id} size={72} />
@@ -151,5 +152,14 @@ const styles = StyleSheet.create({
     color: Colors.gold,
     letterSpacing: 4,
     textTransform: "uppercase",
+  },
+  streak: {
+    fontFamily: "JosefinSans_300Light",
+    fontSize: 10,
+    color: Colors.gold,
+    letterSpacing: 3,
+    textTransform: "uppercase",
+    marginTop: 6,
+    opacity: 0.7,
   },
 });
