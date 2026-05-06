@@ -80,6 +80,7 @@ export function CardProvider({ children }: { children: ReactNode }) {
         if (savedCardId && savedDate === today) {
           const card = fullDeck.find((c) => c.id === parseInt(savedCardId));
           if (card) setCurrentCard(card);
+          await saveToHistory(parseInt(savedCardId), today, savedHistory);
         } else {
           // New Day, pull a new card and save it
           const newCard = getRandomCard();

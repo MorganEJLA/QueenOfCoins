@@ -61,9 +61,6 @@ export default function Settings() {
           if (savedTime) {
             const date = new Date(savedTime);
             setNotificationTime(date);
-            await scheduleDailyNotification(date.getHours(), date.getMinutes());
-          } else {
-            await scheduleDailyNotification(8, 0);
           }
         }
       } catch (e) {
@@ -192,17 +189,10 @@ export default function Settings() {
             from the full 78-card deck — offering a morning practice, work
             approach, creative prompt, and movement for the day.
           </Text>
-          <Text style={styles.aboutVersion}>Version 1.0 · Full Deck</Text>
+          <Text style={styles.aboutVersion}>Version 2.0 · Full Deck</Text>
         </View>
         <View style={styles.divider} />
-        <TouchableOpacity
-          onPress={pullCard}
-          style={{ paddingVertical: 16, alignItems: "center" }}
-        >
-          <Text style={[styles.aboutVersion, { color: Colors.gold }]}>
-            ⟳ Pull New Card (Dev)
-          </Text>
-        </TouchableOpacity>
+
         <View style={{ height: 40 }} />
       </ScrollView>
     </View>
