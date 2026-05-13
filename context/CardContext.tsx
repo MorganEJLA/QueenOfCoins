@@ -132,6 +132,7 @@ export function CardProvider({ children }: { children: ReactNode }) {
 
     const updated = [{ cardId, date }, ...existing];
     setHistory(updated);
+    setStreak(calculateStreak(updated)); // 👈 add this
     await AsyncStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
   }
 
