@@ -41,6 +41,17 @@ function getTodayString(): string {
 function calculateStreak(history: HistoryEntry[]): number {
   if (history.length === 0) return 0;
   const sorted = [...history].sort((a, b) => (a.date > b.date ? -1 : 1));
+
+  const today = getTodayString();
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayString = yesterday.toISOString().split("T")[0];
+
+  // If the most recent pull wasn't today or yesterday, streak is broken
+  if (sorted[0].date !== today && sorted[0].date !== yesterdayString) {
+    return 0;
+  }
+
   let streak = 1;
   for (let i = 0; i < sorted.length - 1; i++) {
     const current = new Date(sorted[i].date);
@@ -80,7 +91,6 @@ export function CardProvider({ children }: { children: ReactNode }) {
         if (savedCardId && savedDate === today) {
           const card = fullDeck.find((c) => c.id === parseInt(savedCardId));
           if (card) setCurrentCard(card);
-          await saveToHistory(parseInt(savedCardId), today, savedHistory);
         } else {
           // New Day, pull a new card and save it
           const newCard = getRandomCard();
