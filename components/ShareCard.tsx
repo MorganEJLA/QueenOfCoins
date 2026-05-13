@@ -1,8 +1,9 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import CardIcon from "./CardIcon";
+import { StyleSheet, Text, View } from "react-native";
 import { Colors } from "../constants/Colors";
 import { TarotCard } from "../constants/tarotCards";
+import CardIcon from "./CardIcon";
+import { QOCLogo } from "./QOCLogo";
 
 type Props = {
   card: TarotCard;
@@ -11,14 +12,14 @@ type Props = {
 export default function ShareCard({ card }: Props) {
   return (
     <View style={styles.container}>
-      <Text style={styles.appName}>QUEEN OF COINS</Text>
+      <View style={{ opacity: 0.2 }}>
+        <QOCLogo size={64} />
+      </View>
       <View style={styles.iconWrap}>
         <CardIcon id={card.id} size={64} />
       </View>
       <Text style={styles.suit}>
-        {card.suit === "major"
-          ? "MAJOR ARCANA"
-          : card.suit.toUpperCase()}
+        {card.suit === "major" ? "MAJOR ARCANA" : card.suit.toUpperCase()}
       </Text>
       <Text style={styles.name}>{card.name.toUpperCase()}</Text>
       <Text style={styles.tagline}>{card.tagline}</Text>
@@ -37,15 +38,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(201,168,76,0.3)",
   },
-  appName: {
-    fontFamily: "JosefinSans_300Light",
-    fontSize: 9,
-    color: "rgba(201,168,76,0.5)",
-    letterSpacing: 4,
-    marginBottom: 32,
-  },
   iconWrap: {
-    marginBottom: 20,
+    marginBottom: 0,
   },
   suit: {
     fontFamily: "JosefinSans_300Light",
