@@ -104,7 +104,10 @@ export default function Settings() {
       );
     }
   };
-
+  const clearToday = async () => {
+    await AsyncStorage.removeItem("qoc_card_date");
+    await AsyncStorage.removeItem("qoc_current_card");
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.wordmark}>Queen Of Coins</Text>
@@ -192,7 +195,9 @@ export default function Settings() {
           <Text style={styles.aboutVersion}>Version 2.0 · Full Deck</Text>
         </View>
         <View style={styles.divider} />
-
+        <TouchableOpacity onPress={clearToday} style={styles.devButton}>
+          <Text style={styles.devButtonText}>DEV: Reset Today's Card</Text>
+        </TouchableOpacity>
         <View style={{ height: 40 }} />
       </ScrollView>
     </View>
@@ -320,5 +325,17 @@ const styles = StyleSheet.create({
     color: Colors.peacock,
     letterSpacing: 3,
     textTransform: "uppercase",
+  },
+  devButton: {
+    padding: 12,
+    borderWidth: 1,
+    borderColor: "rgba(245,237,214,0.2)",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  devButtonText: {
+    color: "rgba(245,237,214,0.4)",
+    fontFamily: "JosefinSans_300Light",
+    fontSize: 12,
   },
 });

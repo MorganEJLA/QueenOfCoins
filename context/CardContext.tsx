@@ -38,6 +38,7 @@ function getRandomCard(): TarotCard {
 function getTodayString(): string {
   return new Date().toISOString().split("T")[0];
 }
+
 function calculateStreak(history: HistoryEntry[]): number {
   if (history.length === 0) return 0;
   const sorted = [...history].sort((a, b) => (a.date > b.date ? -1 : 1));
@@ -65,6 +66,7 @@ function calculateStreak(history: HistoryEntry[]): number {
   }
   return streak;
 }
+
 export function CardProvider({ children }: { children: ReactNode }) {
   const [currentCard, setCurrentCard] = useState<TarotCard>(getRandomCard);
   const [streak, setStreak] = useState(0);
@@ -73,13 +75,11 @@ export function CardProvider({ children }: { children: ReactNode }) {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  //Load persisted data on mount
-
   useEffect(() => {
     async function loadData() {
       try {
         const today = getTodayString();
-        //Restore card if it was pulled today
+
         const [savedCardId, savedDate, savedMovement, savedHistory] =
           await Promise.all([
             AsyncStorage.getItem(CARD_KEY),
@@ -88,27 +88,40 @@ export function CardProvider({ children }: { children: ReactNode }) {
             AsyncStorage.getItem(HISTORY_KEY),
           ]);
 
+        // Restore movement preference
+        if (savedMovement) {
+          setMovementPreferenceState(savedMovement as MovementPreference);
+        }
+
         if (savedCardId && savedDate === today) {
+          // Already pulled today — restore card and history as-is
           const card = fullDeck.find((c) => c.id === parseInt(savedCardId));
           if (card) setCurrentCard(card);
+
+          if (savedHistory) {
+            const parsed = JSON.parse(savedHistory);
+            setHistory(parsed);
+            setStreak(calculateStreak(parsed));
+          }
         } else {
-          // New Day, pull a new card and save it
+          // New day — pull a fresh card
           const newCard = getRandomCard();
           setCurrentCard(newCard);
           await AsyncStorage.setItem(CARD_KEY, String(newCard.id));
           await AsyncStorage.setItem(CARD_DATE_KEY, today);
-          await saveToHistory(newCard.id, today, savedHistory);
-        }
 
-        // Restore movement preference
-        if (savedMovement) {
-          setMovementPreference(savedMovement as MovementPreference);
-        }
+          // Save to history and update state from the result
+          const existing: HistoryEntry[] = savedHistory
+            ? JSON.parse(savedHistory)
+            : [];
+          const alreadySaved = existing.some((e) => e.date === today);
+          const updated = alreadySaved
+            ? existing
+            : [{ cardId: newCard.id, date: today }, ...existing];
 
-        if (savedHistory) {
-          const parsed = JSON.parse(savedHistory);
-          setHistory(parsed);
-          setStreak(calculateStreak(parsed));
+          await AsyncStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
+          setHistory(updated);
+          setStreak(calculateStreak(updated));
         }
       } catch (e) {
         console.error("Failed to load card data", e);
@@ -119,38 +132,33 @@ export function CardProvider({ children }: { children: ReactNode }) {
     loadData();
   }, []);
 
-  async function saveToHistory(
-    cardId: number,
-    date: string,
-    existingHistoryJson: string | null,
-  ) {
-    const existing: HistoryEntry[] = existingHistoryJson
-      ? JSON.parse(existingHistoryJson)
-      : [];
-    const alreadySaved = existing.some((e) => e.date === date);
-    if (alreadySaved) return;
-
-    const updated = [{ cardId, date }, ...existing];
-    setHistory(updated);
-    setStreak(calculateStreak(updated)); // 👈 add this
-    await AsyncStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
-  }
-
   const pullCard = async () => {
     const newCard = getRandomCard();
     setCurrentCard(newCard);
     const today = getTodayString();
     await AsyncStorage.setItem(CARD_KEY, String(newCard.id));
     await AsyncStorage.setItem(CARD_DATE_KEY, today);
-    const existingHistory = await AsyncStorage.getItem(HISTORY_KEY);
-    await saveToHistory(newCard.id, today, existingHistory);
+
+    const existingHistoryJson = await AsyncStorage.getItem(HISTORY_KEY);
+    const existing: HistoryEntry[] = existingHistoryJson
+      ? JSON.parse(existingHistoryJson)
+      : [];
+    const alreadySaved = existing.some((e) => e.date === today);
+    const updated = alreadySaved
+      ? existing
+      : [{ cardId: newCard.id, date: today }, ...existing];
+
+    await AsyncStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
+    setHistory(updated);
+    setStreak(calculateStreak(updated));
   };
 
   const setMovementPreference = async (pref: MovementPreference) => {
     setMovementPreferenceState(pref);
     await AsyncStorage.setItem(MOVEMENT_KEY, pref);
   };
-  if (!isLoaded) return null; // or a loading spinner
+
+  if (!isLoaded) return null;
 
   return (
     <CardContext.Provider
